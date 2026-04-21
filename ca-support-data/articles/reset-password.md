@@ -10,7 +10,7 @@ This article explains how to change or reset your password.
 
 ## Change your password (while logged in)
 
-- Open **Settings**
+- Open **Global-Settings**
 - Click **Edit** next to Account information
 - Type your new password
 - Click **Save**
