@@ -1,7 +1,6 @@
 """
 build.py — converts all .md files in /articles into articles_all.jsonl
 Run automatically by GitHub Actions on every push.
-You never need to run or edit this file manually.
 """
 
 import json
@@ -15,12 +14,12 @@ def parse_md(filepath):
     with open(filepath, "r", encoding="utf-8") as f:
         content = f.read()
 
-    # Extract front matter if present (--- key: value ---)
     title    = ""
     url      = ""
     category = ""
     body     = content
 
+    # Method 1: front matter block (--- key: value ---)
     front_matter_match = re.match(r"^---\n(.*?)\n---\n", content, re.DOTALL)
     if front_matter_match:
         fm = front_matter_match.group(1)
@@ -32,14 +31,30 @@ def parse_md(filepath):
         if url_m:      url      = url_m.group(1).strip()
         if category_m: category = category_m.group(1).strip()
 
-    # Fall back to first H1 as title
+    # Method 2: URL and Category embedded in body as **URL:** and **Category:**
+    if not url:
+        url_in_body = re.search(r'\*\*URL:\*\*\s*(https?://\S+)', body)
+        if url_in_body:
+            url = url_in_body.group(1).strip()
+
+    if not category:
+        cat_in_body = re.search(r'\*\*Category:\*\*\s*(.+)', body)
+        if cat_in_body:
+            category = cat_in_body.group(1).strip()
+
+    # Clean up body — remove the URL/Category header lines and --- separator
+    body = re.sub(r'\*\*URL:\*\*.*\n?', '', body)
+    body = re.sub(r'\*\*Category:\*\*.*\n?', '', body)
+    body = re.sub(r'^---\s*\n', '', body, flags=re.MULTILINE)
+    body = body.strip()
+
+    # Method 3: first H1 as title
     if not title:
         h1 = re.search(r"^#\s+(.+)$", body, re.MULTILINE)
         if h1:
             title = h1.group(1).strip()
-            body  = body[h1.end():].strip()
 
-    # Use filename slug as fallback title
+    # Fallback: filename as title
     if not title:
         title = os.path.splitext(os.path.basename(filepath))[0].replace("-", " ").title()
 
@@ -72,7 +87,7 @@ def main():
             try:
                 record = parse_md(filepath)
                 out.write(json.dumps(record, ensure_ascii=False) + "\n")
-                print(f"  ✓ {filepath}  →  {record['title']}")
+                print(f"  ✓ {record['title']}  |  url: {'yes' if record['url'] else 'MISSING'}  |  cat: {record['categories']}")
             except Exception as e:
                 print(f"  ✗ {filepath}  →  ERROR: {e}")
 
