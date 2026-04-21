@@ -17,7 +17,7 @@ This article explains how to change or reset your password.
 
 ## Reset your password (if logged out)
 
-- Visit the [Reset password](https://app.comparativeagility.com/reset-password) page
+- Visit the [Reset password](https://app.comparativeagility.com/reset-password-1) page
 - Enter your email address
 - Check your inbox for the reset email
 - Click the link and set a new password
