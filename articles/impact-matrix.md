@@ -54,7 +54,7 @@ These teams need the most attention — they are struggling and disconnected. Pr
 
 ## Videos
 
-- [Impact Matrix walkthrough](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
+- [Impact Matrix walkthrough](https://www.youtube.com/watch?v=VWRdfNR7oxM)
 - [Navigating the Overview Screen](https://vimeo.com/YOUR_VIMEO_ID)
 
 ---
